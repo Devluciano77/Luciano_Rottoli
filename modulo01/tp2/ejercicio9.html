@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio9</title>
+</head>
+<body>
+    <script>
+        var suma=0;
+        var promedio=0;
+        for(var i=1;i<=3;i++){
+            let nota = parseInt(prompt('ingresar nota: ' + i));
+            suma= suma + nota
+        }
+        promedio = suma / 3;
+        if(promedio<6){
+            document.write(`alumno reprobado con ${promedio}`);
+        }else if(promedio<9){
+            document.write(`alumno aprobado con ${promedio}`);
+        } else{
+            document.write(`alumno sobresaliente con ${promedio}`);
+        }
+    </script>
+    
+</body>
+</html>

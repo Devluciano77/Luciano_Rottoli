@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio1</title>
+</head>
+<body>
+    <script>
+        var verdadero , char;
+        var valores = [verdadero, false, 2, "hola","mundo" , 3, char];
+        var valores2=[];
+        var valores3=[];
+        var acu='';
+        for (var i=0 ;i<valores.length;i++){
+            if(typeof valores[i] === 'string'){
+                valores2.push(valores[i]);
+            }
+            if(typeof valores[i] === 'number'){
+                valores3.push(valores[i]); 
+            }
+        }
+        for (i=0;i<valores2.length;i++){
+            if (acu.length < valores2[i].length){
+                acu = valores2[i];
+            } 
+        }
+        var sum,div,mul,res;
+        for(i=0;i<valores3.length;i++){
+            if (i==0){
+                sum=valores3[i];
+                div=valores3[i];
+                mul=valores3[i];
+                res=valores3[i];
+            }else{
+                sum = sum + valores3[i];
+                div = div / valores3[i];
+                mul = mul * valores3[i];
+                res = res - valores3[i];
+            }
+        }
+        document.write(`<b>el elemento de texto mayor es:</b> ${acu} <br>`);
+        document.write(`<b>elementos de menor a mayor:</b> ${valores2.sort((a, b) => a.length - b.length)} <br>`);
+        document.write('<br>');
+        document.write('<b>resultado de las cuatro operaciones matemáticas </b><br>');
+        document.write('<br>');
+        document.write(`<b>su suma:</b> ${sum} <br>`);
+        document.write(`<b>resta de los numeros:</b> ${res} <br>`);
+        document.write(`<b>su multiplicacion:</b> ${mul} <br>`);
+        document.write(`<b>su division:</b> ${div} <br>`);
+
+        //no solo resolvi los ejercicios sino que tambien arme un programa capaz de resolver los mismos puntos si se añaden mas datos al array principal
+
+
+        
+    </script>
+    
+</body>
+</html>

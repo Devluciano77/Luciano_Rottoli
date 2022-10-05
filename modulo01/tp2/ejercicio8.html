@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio8</title>
+</head>
+<body>
+    <script>
+        var myArray = []
+        while(myArray.length < 100 ){
+            var numeroAleatorio = Math.ceil(Math.random()*100);
+            var existe = false;
+            for(var i=0;i<myArray.length;i++){
+                if(myArray [i] == numeroAleatorio){
+                    existe = true;
+                    break;
+                }
+            }
+            if(!existe){
+                myArray[myArray.length] = numeroAleatorio;
+            }
+
+        }
+        document.write(myArray);
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio10</title>
+</head>
+<body>
+    <script>
+        var mes = prompt('ingresar numero de mes');
+        var fecha = new Date();
+        var año = fecha.getFullYear();
+        function diasEnUnMes(mes, año) {
+	        document.write('el mes indicado tiene ' + new Date(año, mes, 0).getDate() + ' dias.');
+        }
+        diasEnUnMes(mes,año);
+
+        
+        
+
+    </script>
+    
+</body>
+</html>
