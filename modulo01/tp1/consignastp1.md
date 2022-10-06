@@ -1,23 +1,23 @@
-#CURSO PROGRAMACIÓN WEB FULL STACK
-#NIVEL 2
+# CURSO PROGRAMACIÓN WEB FULL STACK
+# NIVEL 2
 
-####MÓDULO 1 - Nivelación y fundamentos de la Programación
+#### MÓDULO 1 - Nivelación y fundamentos de la Programación
 
 **Ejercicio 1:**
-a) Abrir el editor HTML.
-b) Archivo Nuevo.
-c) Copiar el código que empieza por <!DOCTYPE html> siguiente.
-d) Menú... Archivo... Guardar como: Ejercicio1.html
-e) Abrir el archivo Ejercicio1.html en el navegador
-f) Después del primer mensaje, se debe mostrar otro mensaje que diga "Soy el primer
+- a) Abrir el editor HTML.
+- b) Archivo Nuevo.
+- c) Copiar el código que empieza por <!DOCTYPE html> siguiente.
+- d) Menú... Archivo... Guardar como: Ejercicio1.html
+- e) Abrir el archivo Ejercicio1.html en el navegador
+- f) Después del primer mensaje, se debe mostrar otro mensaje que diga "Soy el primer
 script"
-g) Agregar comentarios que expliquen el funcionamiento del código.
+- g) Agregar comentarios que expliquen el funcionamiento del código.
 ~~~
 <!DOCTYPE html>
 <html>
-		<head>
-			<title>Ejercicio 1 </title>
-		</head>
+	<head>
+		<title>Ejercicio 1 </title>
+	</head>
 	<body>
 		<script>
 			document.writeln("Hola Mundo!");
@@ -144,6 +144,7 @@ Ejercicio8.html’. Ejecuta el programa en el navegador.
 ~~~
 **Ejercicio 9:**
 Crear un archivo: Ejercicio9.html’. Declarar un array llamado “vocales” con las 5 letras. Luego se deben imprimir en el navegador uno debajo de otro.
+
 **Ejercicio 10:**
 Crear un archivo: Ejercicio10.html’ Declarar un array llamado “meses” y que tenga guardado los meses del año. Luego el usuario debe poder tipear en el navegador un número de 1 al 12 y este le devolverá el nombre del mes. Por ejemplo escribe 5 debe devolver el mes mayo.
 
