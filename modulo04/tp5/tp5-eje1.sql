@@ -68,9 +68,26 @@ SELECT DISTINCT departamentos.nombre as departamento FROM sistema.empleados
 INNER JOIN departamentos ON id_departamento = iddepartamento;
 
 --23. Devuelve el nombre del departamento donde trabaja el empleado que tiene el cuit 27-38382980-3.
-
+SELECT departamentos.nombre as departamento FROM sistema.empleados 
+LEFT JOIN departamentos ON id_departamento = iddepartamento
+WHERE empleados.cuil_cuit='27-38382980-3';
 
 --24. Devuelve el nombre del departamento donde trabaja el empleado Pepe Ruiz.
+SELECT departamentos.nombre as departamento FROM sistema.empleados 
+inner JOIN departamentos ON id_departamento = iddepartamento
+WHERE empleados.nombre='Pepe' AND empleados.apellido='Ruiz';
+
 --25. Devuelve un listado con los datos de los empleados que trabajan en el departamento de I+D. Ordena el resultado alfabéticamente.
+SELECT * FROM sistema.empleados 
+RIGHT JOIN departamentos ON id_departamento = iddepartamento
+WHERE departamentos.nombre='I+D' ORDER BY empleados.nombre ASC;
+
 --26. Devuelve un listado con los datos de los empleados que trabajan en el departamento de Sistemas, Contabilidad o I+D. Ordena el resultado alfabéticamente.
+SELECT * FROM sistema.empleados 
+RIGHT JOIN departamentos ON id_departamento = iddepartamento
+WHERE departamentos.nombre='I+D' OR departamentos.nombre='Sistemas' OR departamentos.nombre='Contabilidad' ORDER BY empleados.nombre ASC;
+
 --27. Devuelve una lista con el nombre de los empleados que tienen los departamentos que no tienen un presupuesto entre $100000 y $200000.
+SELECT empleados.nombre FROM sistema.empleados 
+RIGHT JOIN departamentos ON id_departamento = iddepartamento
+WHERE departamentos.presupuesto NOT BETWEEN 100000 AND 200000;
