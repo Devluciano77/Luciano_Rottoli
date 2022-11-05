@@ -92,27 +92,105 @@ WHERE cantidad is NULL
 ORDER BY vendedores.apellido ASC;
 
 --22.Devuelve un listado con los clientes que no han realizado ningún pedido y de los vendedores que no han participado en ningún pedido. Ordene el listado alfabéticamente por el apellido y el nombre. En el listado deberá diferenciar de algún modo los clientes y los vendedores.
-
+SELECT vendedores.nombre, vendedores.apellido, '' AS cliente_id,vendedores.id AS vendedor_id FROM ventas.pedidos
+RIGHT JOIN ventas.vendedores ON ventas.pedidos.id_vendedor=ventas.vendedores.id
+WHERE ventas.pedidos.id_vendedor IS NULL
+UNION
+SELECT clientes.nombre, clientes.apellido,clientes.id AS cliente_id, '' FROM ventas.pedidos
+RIGHT JOIN ventas.clientes ON ventas.pedidos.id_cliente=ventas.clientes.id
+WHERE ventas.pedidos.id_cliente IS NULL
+ORDER BY apellido ASC;
 
 --23.Calcula la cantidad total que suman todos los pedidos que aparecen en la tabla pedido.
+SELECT SUM(pedidos.cantidad)AS total_pedidos FROM pedidos;
+
 --24.Calcula la cantidad media de todos los pedidos que aparecen en la tabla pedido.
+SELECT AVG(ALL pedidos.cantidad) AS promedio_pedidos FROM pedidos;
+
 --25.Calcula el número total de vendedores distintos que aparecen en la tabla pedido.
+SELECT COUNT(DISTINCT pedidos.id_vendedor) AS total_vendedores FROM pedidos;
+
 --26.Calcula el número total de clientes que aparecen en la tabla cliente.
+SELECT COUNT(DISTINCT nombre) AS total_clientes FROM clientes;
+
 --27.Calcula cuál es la mayor cantidad que aparece en la tabla pedido.
+SELECT MAX(cantidad) AS cantidad_mayor FROM pedidos;
+
 --28.Calcula cuál es la menor cantidad que aparece en la tabla pedido.
+SELECT MIN(cantidad) AS cantidad_mayor FROM pedidos;
+
 --29.Calcula cuál es el valor máximo de categoría para cada una de las ciudades que aparece en la tabla cliente.
+SELECT MAX(categoría) AS categoria_maxima FROM clientes;
+
 --30.Calcula cuál es el máximo valor de los pedidos realizados durante el mismo día para cada uno de los clientes. Es decir, el mismo cliente puede haber realizado varios pedidos de diferentes cantidades el mismo día. Se pide que se calcule cuál es el pedido de máximo valor para cada uno de los días en los que un cliente ha realizado un pedido. Muestra el identificador del cliente, nombre, apellido, la fecha y el valor de la cantidad.
---31.Calcula cuál es el máximo valor de los pedidos realizados durante el mismo día para cada uno de los clientes, teniendo en cuenta que sólo queremos mostrar aquellos pedidos que superen la cantidad de $2000 .
+SELECT max(pedidos.cantidad) AS Max_Pedido, fecha, id_cliente, clientes.nombre, clientes.apellido  FROM ventas.pedidos 
+INNER JOIN ventas.clientes ON ventas.clientes.id=ventas.pedidos.id_cliente
+GROUP BY ventas.pedidos.id_cliente, ventas.pedidos.fecha;
+
+
+--31.Calcula cuál es el máximo valor de los pedidos realizados durante el mismo día para cada uno de los clientes, teniendo en cuenta que sólo queremos mostrar aquellos pedidos que superen la cantidad de $2000.
+SELECT c.id,c.nombre,c.apellido,p.fecha,p.cantidad FROM clientes c
+JOIN pedidos p ON c.id = p.id_cliente
+WHERE cantidad<2000
+GROUP BY fecha ORDER BY fecha
+
 --32.Calcula el máximo valor de los pedidos realizados para cada uno de los vendedores durante la fecha 2021-08-17. Muestra el identificador del vendedor, nombre, apellido y total.
+SELECT c.id,c.nombre,c.apellido,p.fecha,p.cantidad FROM clientes c
+INNER JOIN pedidos p ON c.id = p.id_cliente
+WHERE fecha LIKE '2021-08-17'
+
 --33.Devuelve un listado con el identificador de cliente, nombre y apellido y el número total de pedidos que ha realizado cada uno de los clientes. Tenga en cuenta que pueden existir clientes que no han realizado ningún pedido. Estos clientes también deben aparecer en el listado indicando que el número de pedidos realizados es 0.
+SELECT DISTINCT c.id,c.nombre,c.apellido,p.fecha,p.cantidad FROM clientes c
+LEFT JOIN pedidos p ON c.id = p.id_cliente
+GROUP BY nombre;
+
 --34.Devuelve un listado con el identificador de cliente, nombre, apellido y el número total de pedidos que ha realizado cada uno de clientes durante el año 2020.
+SELECT c.id,c.nombre,c.apellido,p.fecha FROM clientes c
+INNER JOIN pedidos p ON c.id = p.id_cliente
+WHERE fecha LIKE '2020%';
+
 --35.Devuelve cuál ha sido el pedido de máximo valor que se ha realizado cada año.
+SELECT id, MAX(cantidad) AS cantidad , YEAR(fecha) AS año FROM pedidos
+GROUP BY YEAR(fecha)
+ORDER BY YEAR(fecha) ASC;
+
 --36.Devuelve el número total de pedidos que se han realizado cada año.
+SELECT count(cantidad) AS cantidad , YEAR(fecha) AS fecha FROM pedidos
+GROUP BY YEAR(fecha)
+ORDER BY YEAR(fecha) ASC;
+
 --37.Devuelve un listado con todos los pedidos que ha realizado Adela Salas. (Sin utilizar INNER JOIN).
+SELECT p.cantidad AS cantidad_pedidos, concat_ws(' ',c.nombre, c.apellido) AS nombre_cliente 
+FROM pedidos p 
+LEFT JOIN clientes c ON p.id_cliente = c.id 
+WHERE c.id = '2';
+
 --38.Devuelve el número de pedidos en los que ha participado el vendedor Daniel Sáe. (Sin utilizar INNER JOIN)
+SELECT p.cantidad AS cantidad_pedidos, concat_ws(' ',v.nombre, v.apellido) AS nombre_vendedor 
+FROM pedidos p 
+LEFT JOIN vendedores v ON p.id_vendedor = v.id 
+WHERE v.id = '1';
+
 --39.Devuelve los datos del cliente que realizó el pedido más caro en el año 2020. (Sin utilizar INNER JOIN)
+SELECT DISTINCT concat_ws(' ',c.nombre,c.apellido) AS Cliente,max(p.cantidad), p.fecha FROM clientes c
+LEFT JOIN pedidos p on c.id = p.id_cliente WHERE fecha LIKE '2020%';
+
 --40.Devuelve la fecha y la cantidad del pedido de menor valor realizado por el cliente Pepe Ruiz Santana.
+SELECT distinct concat_ws(' ',c.nombre,c.apellido) as Cliente,min(cantidad) as cantidad from clientes c
+left join pedidos p on c.id = p.id_cliente where c.id = '8'
+
 --41.Devuelve un listado de los clientes que no han realizado ningún pedido. (Utilizando IN o NOT IN).
+SELECT concat_ws(' ',c.nombre,c.apellido) AS Cliente FROM clientes c
+WHERE c.id not in (select p.id_cliente from pedidos p);
+
 --42.Devuelve un listado de los vendedores que no han realizado ningún pedido. (Utilizando IN o NOT IN).
+SELECT concat_ws(' ',v.nombre,v.apellido) AS Vendedor, v.id FROM vendedores v
+WHERE v.id not in (select p.id_vendedor from pedidos p);
+
 --43.Devuelve un listado de los clientes que no han realizado ningún pedido. (Utilizando EXISTS o NOT EXISTS).
+SELECT concat_ws(' ',c.nombre,c.apellido) AS Cliente, c.id FROM clientes c
+WHERE not exists (select * from pedidos p where c.id = p.id_cliente);
+
 --44.Devuelve un listado de los vendedores que no han realizado ningún pedido. (Utilizando EXISTS o NOT EXISTS).
+SELECT concat_ws(' ',v.nombre,v.apellido) AS Vendedor, v.id FROM vendedores v
+WHERE not exists (select * from pedidos p where v.id = p.id_vendedor);
