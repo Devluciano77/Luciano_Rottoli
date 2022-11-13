@@ -47,20 +47,116 @@ ADD COLUMN gasto DOUBLE NOT NULL AFTER presupuesto,
 ADD COLUMN tms TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER gasto;
 
 --4. Insertar 5 registros en cada tabla de: paises, provincias, localidades, departamentos,empleados.
+INSERT INTO paises VALUES
+(1, 'Argentina'),
+(2, 'Brasil'),
+(3, 'Uruguay'),
+(4, 'Chile'),
+(5, 'Peru');
 
+INSERT INTO provincias VALUES 
+(1, 'Misiones', 1),
+(2, 'Santa Fe', 1),
+(3, 'Corrientes',1),
+(4, 'Buenos Aires', 1),
+(5, 'Entre Rios', 1);
+
+INSERT INTO localidades VALUES 
+(1, 'Posadas', '3300', 1),
+(2, 'Montecarlo', '4400', 1),
+(3, 'Eldorado', '5500',1),
+(4, 'Capiovi', '6600',1),
+(5, 'Obera', '7700',1);
+
+INSERT INTO departamentos(iddepartamento,nombre,presupuesto,estado,gasto) VALUES
+(1,'Sistema','10000','1','5000'),
+(2,'Contabilidad','20000','1','10000'),
+(3,'Legales','30000','1','15000'),
+(4,'Publicidad','40000','1','20000'),
+(5,'Finanza','50000','1','25000');
+
+INSERT INTO empleados(idemplaedo,cuil_cuit,nombre,apellido,direccion,email,telefono,fecha_ingreso,id_departamento,estado,id_localidad) VALUES
+(1,'20429662371','Lionel','Messi','San Miguel','messi@gmail.com', '421600','2022-02-02',1,1,1),
+(2,'20354870526','Neymar','Junior','San Miguel', 'ney@gmail.com', '456800','2022-02-02',2,1,1),
+(3,'20123456789','Zlatan','Ibrahimovic','San Miguel','ibra@gmail.com', '256705','2022-02-02',3,1,1),
+(4,'20987654321','James','Hetfield','San Miguel','james@gmail.com','457821','2022-02-02',1,1,1),
+(5,'20111222334','Dave','Mustaine','San Miguel','dave@gmail.com','562389','2022-02-02',2,1,1);
 
 --5. Modificar el nombre de la tabla “pedidos” por “movimientos”. RENAME TABLE
+ALTER TABLE pedidos
+RENAME TO movimientos;
+
 --6. Agregar las entidades:
 --● Productos (id, nombre, descripcion, id_marca fk, stock, precio, estado, tms)
 --● Marcas (id, nombre, descripción, imagen, id_proveedor, estado, tms)
 --● Proveedores (id, razon_social, nombre, apellido, naturaleza (fisica o juridica),cuit,id_localidad fk, estado,tms)
 --● Cajas (id,horainicio(datatime),horacierre(datatime), estado, tms)Notas: Muchos productos tienen una sola marca, o una marca tiene uno o muchos productos.Un proveedor está en una localidad.
+CREATE TABLE marcas (
+id_marcas INT NOT NULL,
+nombre VARCHAR(30),
+descripcion VARCHAR(45),
+imagen VARCHAR(45),
+id_provedor INT,
+estado tinyint(1) DEFAULT NULL,
+tms timestamp);
+
+CREATE TABLE proveedores (
+id_provedores INT NOT NULL,
+razon_social VARCHAR(45),
+nombre VARCHAR(30),
+apellido VARCHAR(30),
+naturaleza VARCHAR(30),
+cuit INT,
+id_localidad INT NOT NULL,
+estado tinyint(1) DEFAULT NULL,
+tms TIMESTAMP);
+
+CREATE TABLE cajas (
+id_cajas INT NOT NULL,
+horainicio DATETIME,
+horacierre DATETIME,
+estado tinyint(1) DEFAULT NULL,
+tms TIMESTAMP);
+
 --7. Insertar 5 registros en cada tabla del punto 6. Tener en cuenta que el script debe ejecutarse secuencialmente y no fallar.
+INSERT INTO marcas(id_marcas,nombre,descripcion,imagen,id_provedor,estado) VALUES
+(1,'BMW','buena','',1,1),
+(2,'Samsom','muy buena','',2,1),
+(3,'HP','buena','',3,1),
+(4,'Manaos','mala','',4,1),
+(5,'Jackson','muy buena','',5,1);
+
+INSERT INTO proveedores (id_provedores,razon_social,nombre,apellido,naturaleza,cuit,id_localidad,estado) VALUES
+(1,'Pepsico Iberia S.L.','Lucho','Suarez','acreedor',452452,1,1),
+(2,'Telefónica Móviles S.A.U.','Gerard','Pique','acreedor',452452,2,1),
+(3,'Telefónica Móviles S.A.U.','Carles','Puyol','acreedor',452452,3,1),
+(4,'Telefónica Móviles S.A.U.','Sergio','Busquets','acreedor',452542,2,1),
+(5,'Telefónica Móviles S.A.U.','Sergio','Ramos','acreedor',452452,4,1);
+
+INSERT INTO cajas(id_cajas,horainicio,horacierre,estado) VALUES
+(1,'2038-01-19 08:14:07','2038-01-19 18:14:07',1),
+(2,'2038-01-19 08:14:07','2038-01-19 18:14:07',1),
+(3,'2038-01-19 08:14:07','2038-01-19 18:14:07',1),
+(4,'2038-01-19 08:14:07','2038-01-19 18:14:07',1),
+(5,'2038-01-19 08:14:07','2038-01-19 18:14:07',1);
+
+
+
 --8. Listar el nombre, presupuesto, gastos y diferencia(presupuesto-gasto) de todos los departamentos con estado activo o 1.
---9. Listar todas todas las localidades agrupadas por pais. En la vista se deberia ver el nombre del pais y el nombre de la localidad
+SELECT nombre,presupuesto,gasto,presupuesto-gasto AS diferencia FROM elsistema.departamentos
+WHERE estado = 1;
+
+--9. Listar todas todas las localidades agrupadas por pais. En la vista se deberia ver el nombre del pais y el nombre de la localidad.
+SELECT localidades.nombre AS Localidad,paises.nombre AS Pais FROM elsistema.localidades
+INNER JOIN provincias ON localidades.id_provincia= provincias.id
+INNER JOIN paises ON provincias.id_pais= paises.id
+ORDER BY paises.nombre ASC;
+
 --10. Modificar (UPADTE):
 --● el telefono de un empleado cuando el id es igual a uno que hayan declarado.
 --● el fecha_ingreso y la localidad de otro empleado.
+
+
 --11. Insertar 5 vendedores.
 --12. Modificar la tabla movimientos y agregar los campos: id_producto fk, estado,tms(timestamp), tipo_movimiento (ingreso, egreso, pedido)
 --13. Insertar 5 movimientos distintos.
