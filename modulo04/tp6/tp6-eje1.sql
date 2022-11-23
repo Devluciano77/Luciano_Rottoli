@@ -91,34 +91,53 @@ RENAME TO movimientos;
 --● Marcas (id, nombre, descripción, imagen, id_proveedor, estado, tms)
 --● Proveedores (id, razon_social, nombre, apellido, naturaleza (fisica o juridica),cuit,id_localidad fk, estado,tms)
 --● Cajas (id,horainicio(datatime),horacierre(datatime), estado, tms)Notas: Muchos productos tienen una sola marca, o una marca tiene uno o muchos productos.Un proveedor está en una localidad.
+CREATE TABLE Productos (
+id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+nombre VARCHAR(30),
+descripcion VARCHAR(45),
+id_marca INT UNSIGNED NOT NULL,
+stock INT,
+precio FLOAT,
+estado tinyint(1) DEFAULT NULL,
+tms timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP);
+
+
 CREATE TABLE marcas (
-id_marcas INT NOT NULL,
+id_marcas INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 nombre VARCHAR(30),
 descripcion VARCHAR(45),
 imagen VARCHAR(45),
 id_provedor INT,
 estado tinyint(1) DEFAULT NULL,
-tms timestamp);
+tms TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE proveedores (
-id_provedores INT NOT NULL,
+id_provedores INT UNSIGNED NOT NULL,
 razon_social VARCHAR(45),
 nombre VARCHAR(30),
 apellido VARCHAR(30),
 naturaleza VARCHAR(30),
 cuit INT,
-id_localidad INT NOT NULL,
+id_localidad INT UNSIGNED NOT NULL,
 estado tinyint(1) DEFAULT NULL,
-tms TIMESTAMP);
+tms TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE cajas (
 id_cajas INT NOT NULL,
 horainicio DATETIME,
 horacierre DATETIME,
 estado tinyint(1) DEFAULT NULL,
-tms TIMESTAMP);
+tms TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP);
 
 --7. Insertar 5 registros en cada tabla del punto 6. Tener en cuenta que el script debe ejecutarse secuencialmente y no fallar.
+
+INSERT INTO productos(id,nombre,descripcion,id_marca,stock,precio,estado)VALUES
+(1,'auto','rojo',1,5,20000,1),
+(2,'moto','rojo',1,5,30000,1),
+(3,'auto','negro',1,5,20000,1),
+(4,'auto','verde',1,5,20000,1),
+(5,'auto','azul',1,5,20000,1);
+
 INSERT INTO marcas(id_marcas,nombre,descripcion,imagen,id_provedor,estado) VALUES
 (1,'BMW','buena','',1,1),
 (2,'Samsom','muy buena','',2,1),
@@ -155,16 +174,72 @@ ORDER BY paises.nombre ASC;
 --10. Modificar (UPADTE):
 --● el telefono de un empleado cuando el id es igual a uno que hayan declarado.
 --● el fecha_ingreso y la localidad de otro empleado.
+UPDATE empleados SET telefono='421601'
+WHERE idemplaedo = 1;
+
+UPDATE empleados SET fecha_ingreso='2022-03-03',id_localidad=2
+WHERE idemplaedo = 1;
 
 
 --11. Insertar 5 vendedores.
---12. Modificar la tabla movimientos y agregar los campos: id_producto fk, estado,tms(timestamp), tipo_movimiento (ingreso, egreso, pedido)
+INSERT INTO vendedores VALUES 
+(1,'Naruto','Uzumaki','20652256',1),
+(2,'Sasuke','Uchiha','21652256',1),
+(3,'Kakashi','Hatake','22652256',2),
+(4,'Rock','Lee','25652256',2),
+(5,'Itachi','Uchiha','28652256',2);  
+
+--12. Modificar la tabla movimientos y agregar los campos: id_producto fk, estado,tms(timestamp), tipo_movimiento (ingreso, egreso, pedido).
+ALTER TABLE movimientos
+ADD COLUMN id_producto INT UNSIGNED NOT NULL,
+ADD COLUMN estado tinyint(1) DEFAULT NULL,
+ADD COLUMN tms TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN tipo_movimiento VARCHAR(10) NOT NULL;
+
 --13. Insertar 5 movimientos distintos.
+INSERT INTO movimientos(id,cantidad,fecha,id_cliente,id_vendedor,id_producto,estado,tipo_movimiento) VALUES 
+(1,23,'2022-02-20',1,1,1,1,'ingreso'),
+(2,45,'2022-03-05',2,2,2,1,'egreso'),
+(3,65,'2022-02-06',5,3,3,1,'pedido'),
+(4,77,'2022-04-07',4,3,4,1,'egreso'),
+(5,78,'2022-05-08',3,4,5,1,'ingreso');
+ 
 --14. Borrar lógicamente (UPDATE de la columna estado):
 --● 2 movimientos que fueron cargados mal
---● un pais que tenga al menos 3 localidades
+--● un pais que tenga al menos 3 localidades.
+UPDATE movimientos
+SET estado = 0
+WHERE id =1;
+
 --15. Modificar el campo stock de la tabla productos teniendo en cuenta la cantidad de la tabla de movimientos. Sumar el stock si es un ingreso, restar si es un egreso. Esto hacerlo de manera manual en base los 5 movimientos insertados en el punto 13. Es decir deben haber 5 updates de la tabla producto.
+UPDATE productos
+SET stock = 123
+WHERE id =1;
+
+UPDATE productos
+SET stock = 55
+WHERE id =2;
+
+UPDATE productos
+SET stock = 100
+WHERE id =3;
+
+UPDATE productos
+SET stock = 23
+WHERE id =4;
+
+UPDATE productos
+SET stock = 123
+WHERE id =5;
+
 --16. Cear la tabla parametros (id, tms,cosas(json), id_usuario)
+CREATE TABLE parametros (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    cosas JSON  NOT NULL,
+    id_usuario INT UNSIGNED NOT NULL,
+    tms TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 --17. Insertar en la tabla parametros teniendo en cuenta la columna cosas:
 --● {"idDeLaCosa": 101, "permisos": "PUT, GET"}
 --● {"vistasPermitidas":"menuPrincipal,menuSecundario,ventas,estadisticaVentas,listaCliente",“grupo": "ventas"}
@@ -172,6 +247,16 @@ ORDER BY paises.nombre ASC;
 --● {"fechaInicioActividades": 01/01/2019, "mesAperturaCaja": "Enero", "mesCierreCaja":"Diciembre"}
 --● {"balancesAniosAnteriores": {"2019": {"ingreso": "7374901.93","egreso":"3732538,75"},"2020":{"ingreso": "27442665,12","egreso": "8522331,82"},"2021": {"ingreso":"31634912,57","egreso": "9757142,66"}}}
 --Nota: Rellenar a criterio los campos id, tms,id_usuario
+INSERT INTO parametros (id,cosas,id_usuario) VALUES 
+(1,'{"idDeLaCosa": 101, "permisos": "PUT, GET"}',1),
+(2,'{"vistasPermitidas": "menuPrincipal,menuSecundario,ventas,estadisticaVentas,listaCliente", "grupo": "ventas"}',2),
+(3,'{"zonaHoraria": "America/Argentina/BuenosAires"}',3),
+(4,'{"fechaInicioActividades": "01/01/2019", "mesAperturaCaja": "Enero", "mesCierreCaja": "Diciembre"}',4),
+(5,'{"balancesAniosAnteriores": {"2019": {"ingreso": "7374901.93", "egreso": "3732538.75"}, "2020":{"ingreso": "27442665.12", "egreso": "8522331.82"},"2021": {"ingreso":"31634912.57", "egreso": "9757142.66"}}}',5);
+
 --Ejercicio 2:
 --Subir al repositorio público apellido_nombre las respuestas tp6-eje1.sql.
 --Subir al repositorio publicó una captura de pantalla en jpg o png del esquema completo. El archivo debe llamarse diagrama_bd-tp6-eje1.jpg|.png
+
+
+
